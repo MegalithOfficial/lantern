@@ -1,0 +1,11 @@
+edition = "2024"
+style_edition = "2024"
+max_width = 160
+use_small_heuristics = "Max"
+newline_style = "Unix"
+
+# Import merging and grouping require nightly rustfmt: cargo +nightly fmt.
+unstable_features = true
+imports_granularity = "Crate"
+group_imports = "StdExternalCrate"
+reorder_imports = true

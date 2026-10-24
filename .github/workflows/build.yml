@@ -1,0 +1,99 @@
+name: Build
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  ORT_CACHE_DIR: ${{ github.workspace }}/.cache/ort
+
+jobs:
+  version:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Verify release version
+        run: python3 scripts/package-release.py --verify-version
+
+  tools:
+    name: CLI and MCP (${{ matrix.target }})
+    needs: version
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: windows-2025
+            target: x86_64-pc-windows-msvc
+          - os: macos-15
+            target: aarch64-apple-darwin
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ matrix.target }}
+          cache-directories: .cache/ort
+      - name: Build optimized binaries
+        run: cargo build --release --locked --target ${{ matrix.target }} -p lantern-cli -p lantern-mcp
+      - name: Package
+        run: python scripts/package-release.py --target ${{ matrix.target }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lantern-${{ matrix.target }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+
+  desktop:
+    name: Linux desktop
+    needs: version
+    runs-on: ubuntu-24.04
+    container: archlinux:base-devel
+    timeout-minutes: 45
+    steps:
+      - name: Install build dependencies
+        run: pacman -Syu --noconfirm --needed git rust gtk4 gtksourceview5 glib2-devel openssl pkgconf python
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-desktop-arch
+          cache-directories: .cache/ort
+      - name: Build optimized binaries
+        run: cargo build --release --locked --target x86_64-unknown-linux-gnu --workspace
+      - name: Package
+        run: python scripts/package-release.py --target x86_64-unknown-linux-gnu --desktop
+      - uses: actions/upload-artifact@v7
+        with:
+          name: lantern-linux-desktop
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0

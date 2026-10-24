@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Lantern
+Comment=Explore Minecraft server internals
+Exec=lantern-ui
+Icon=dev.megalithofficial.Lantern
+Terminal=false
+Categories=Development;
+StartupWMClass=dev.megalithofficial.Lantern

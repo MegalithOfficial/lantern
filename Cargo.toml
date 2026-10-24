@@ -1,0 +1,30 @@
+[workspace]
+resolver = "3"
+members = ["crates/lantern-core", "crates/lantern-embed",
+    "crates/lantern-chat", "crates/lantern-cli", "crates/lantern-mcp", "crates/lantern-ui"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-only"
+repository = "https://github.com/MegalithOfficial/lantern"
+
+[workspace.dependencies]
+lantern-core = { path = "crates/lantern-core" }
+lantern-embed = { path = "crates/lantern-embed" }
+lantern-chat = { path = "crates/lantern-chat" }
+anyhow = "1.0.104"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1.0.151"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+debug = false
+strip = "debuginfo"
+
+# Diffing thousands of files is far too slow unoptimized, also in a debug build.
+[profile.dev.package.similar]
+opt-level = 3

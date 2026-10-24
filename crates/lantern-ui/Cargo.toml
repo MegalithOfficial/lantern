@@ -1,0 +1,28 @@
+[package]
+name = "lantern-ui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "lantern-ui"
+path = "src/main.rs"
+
+[features]
+default = ["highlight"]
+highlight = ["dep:sourceview5"]
+
+[dependencies]
+lantern-core.workspace = true
+lantern-embed.workspace = true
+lantern-chat.workspace = true
+anyhow.workspace = true
+pulldown-cmark = { version = "0.13", default-features = false }
+serde_json.workspace = true
+relm4 = { version = "0.11", default-features = false }
+gtk = { package = "gtk4", version = "0.11", features = ["v4_22"] }
+pango = { version = "0.22", features = ["v1_56"] }
+sourceview5 = { version = "0.11", optional = true }
+
+[build-dependencies]
+glib-build-tools = "0.22"

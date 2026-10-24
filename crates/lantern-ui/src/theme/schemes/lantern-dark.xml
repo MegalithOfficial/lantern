@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<style-scheme id="lantern-dark" name="Lantern Dark" version="1.0">
+  <style name="text" foreground="#f0f6fc" background="#0d1117"/>
+  <style name="cursor" foreground="#4493f8"/>
+  <style name="selection" background="#1c3a5e"/>
+  <style name="current-line" background="#151b23"/>
+  <style name="current-line-number" foreground="#f0f6fc" background="#151b23"/>
+  <style name="line-numbers" foreground="#656c76" background="#0d1117"/>
+  <style name="bracket-match" foreground="#f0f6fc" background="#253247"/>
+  <style name="search-match" background="#5a4414"/>
+  <style name="def:comment" foreground="#9198a1" italic="true"/>
+  <style name="def:keyword" foreground="#ff7b72"/>
+  <style name="def:statement" foreground="#ff7b72"/>
+  <style name="def:type" foreground="#ffa657"/>
+  <style name="def:string" foreground="#a5d6ff"/>
+  <style name="def:special-char" foreground="#79c0ff"/>
+  <style name="def:number" foreground="#79c0ff"/>
+  <style name="def:constant" foreground="#79c0ff"/>
+  <style name="def:boolean" foreground="#79c0ff"/>
+  <style name="def:identifier" foreground="#f0f6fc"/>
+  <style name="def:function" foreground="#be8fff"/>
+  <style name="def:builtin" foreground="#be8fff"/>
+  <style name="def:preprocessor" foreground="#be8fff"/>
+</style-scheme>

@@ -1,0 +1,1241 @@
+/* GitHub Dark Tritanopia, the dark theme used in Zed, and the design language of Megalith
+   Widgets: IBM Plex Sans and Lilex, flat controls with 6px corners, hover and active tints
+   instead of borders, quick eased animations. */
+:root {
+    --bg: #0d1117;
+    --sidebar: #010409;
+    --raised: #151b23;
+    --border: #3d444d;
+    --line: rgb(61 68 77 / 55%);
+    --hover: rgb(101 108 118 / 16%);
+    --selected: rgb(101 108 118 / 28%);
+    --fg: #f0f6fc;
+    --muted: #9198a1;
+    --faint: #656c76;
+    --accent: #4493f8;
+    --accent-fg: #ffffff;
+    --danger: #f85149;
+    --green: #3fb950;
+    --amber: #d29922;
+    --purple: #be8fff;
+    --blue: #58a6ff;
+    --shadow: rgb(1 4 9 / 45%);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+window {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 13px;
+}
+
+/* The window draws its own top bar, the real titlebar is an empty box. */
+.titlebar-stub {
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+}
+
+separator {
+    background: var(--line);
+    min-width: 1px;
+    min-height: 1px;
+}
+
+paned > separator {
+    background: var(--line);
+    min-width: 1px;
+}
+
+scrollbar {
+    background: none;
+    border: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+
+scrolledwindow:hover scrollbar {
+    opacity: 1;
+}
+
+/* The default theme shades the edge where more is to scroll and glows when it is hit. */
+scrolledwindow > undershoot,
+scrolledwindow > overshoot {
+    background: none;
+    box-shadow: none;
+}
+
+scrollbar slider {
+    min-width: 6px;
+    min-height: 6px;
+    border-radius: 999px;
+    background: var(--selected);
+}
+
+.sidebar {
+    background: var(--sidebar);
+}
+
+.brand {
+    font-weight: 600;
+}
+
+.about-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.badge {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--hover);
+    border-radius: 6px;
+    padding: 1px 7px;
+}
+
+.topbar {
+    min-height: 40px;
+    padding: 0 6px 0 8px;
+    border-bottom: 1px solid var(--line);
+}
+
+.crumb {
+    color: var(--muted);
+}
+
+.crumb-title {
+    font-weight: 600;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.caption {
+    font-size: 12px;
+}
+
+.mono,
+.monospace,
+textview.monospace,
+textview.code {
+    font-family: "Lilex", monospace;
+    font-feature-settings: "tnum", "calt" 0;
+}
+
+.section {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--faint);
+    padding: 12px 14px 4px 14px;
+}
+
+.strip {
+    padding: 6px 14px;
+}
+
+/* Buttons: filled with a tint, never outlined */
+button {
+    transition: background-color 140ms ease, color 140ms ease, opacity 140ms ease;
+    background: var(--hover);
+    box-shadow: none;
+    border: none;
+    border-radius: 6px;
+    padding: 0 10px;
+    min-height: 26px;
+    color: var(--fg);
+    font-weight: 500;
+}
+
+button:hover {
+    background: var(--selected);
+}
+
+button:active,
+button:checked {
+    background: var(--selected);
+}
+
+button:disabled {
+    color: var(--faint);
+    background: rgb(101 108 118 / 8%);
+}
+
+button:focus-visible {
+    box-shadow: inset 0 0 0 1px rgb(68 147 248 / 70%);
+}
+
+button.primary {
+    background: var(--accent);
+    color: var(--accent-fg);
+}
+
+button.primary:hover {
+    background: color-mix(in srgb, var(--accent) 86%, white);
+}
+
+button.primary:disabled {
+    background: var(--hover);
+    color: var(--faint);
+}
+
+button.danger:not(:disabled) {
+    color: var(--danger);
+}
+
+button.danger:hover:not(:disabled) {
+    background: rgb(248 81 73 / 14%);
+}
+
+button.round {
+    border-radius: 999px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 0;
+}
+
+/* Icon only and text-only buttons that sit in a bar */
+button.flat {
+    background: none;
+    color: var(--muted);
+    padding: 0 6px;
+    min-width: 26px;
+}
+
+button.flat:hover {
+    background: var(--hover);
+    color: var(--fg);
+}
+
+button.flat:active,
+button.flat:checked {
+    background: var(--selected);
+    color: var(--fg);
+}
+
+button.flat:disabled {
+    background: none;
+    opacity: 0.35;
+}
+
+/* The page buttons, one row at the bottom of the sidebar */
+.navbar {
+    padding: 6px 8px;
+    border-top: 1px solid var(--line);
+}
+
+button.nav {
+    background: none;
+    border-radius: 6px;
+    padding: 6px 0;
+    min-height: 0;
+    color: var(--muted);
+}
+
+button.nav:hover {
+    background: var(--hover);
+}
+
+button.nav:checked {
+    background: var(--selected);
+}
+
+button.nav:checked > image {
+    opacity: 1;
+}
+
+button.nav > image {
+    opacity: 0.75;
+}
+
+/* A list of choices in the sidebar: lookup kinds, setup sections */
+.choices {
+    background: none;
+}
+
+.choices > row {
+    border-radius: 6px;
+    margin: 1px 6px;
+    min-height: 28px;
+}
+
+.choices > row:selected {
+    background: var(--selected);
+    color: var(--fg);
+}
+
+/* Window buttons of our own: thin glyphs on equal squares, like Zed. */
+button.window-button {
+    background: none;
+    border-radius: 6px;
+    padding: 0;
+    min-width: 28px;
+    min-height: 28px;
+}
+
+button.window-button > image {
+    opacity: 0.6;
+    transition: opacity 140ms ease;
+}
+
+button.window-button:hover {
+    background: var(--hover);
+}
+
+button.window-button:hover > image {
+    opacity: 1;
+}
+
+button.window-button:active {
+    background: var(--selected);
+}
+
+button.window-button.close:hover {
+    background: var(--danger);
+}
+
+button.window-button.close:active {
+    background: color-mix(in srgb, var(--danger) 80%, black);
+}
+
+/* Inputs */
+entry,
+spinbutton {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: none;
+    outline: none;
+    min-height: 28px;
+    color: var(--fg);
+    caret-color: var(--accent);
+    transition: border-color 140ms ease;
+}
+
+entry:focus-within,
+spinbutton:focus-within {
+    border-color: rgb(68 147 248 / 70%);
+}
+
+entry > text > placeholder,
+text > placeholder {
+    color: var(--faint);
+}
+
+entry > image {
+    color: var(--faint);
+}
+
+entry.bare,
+entry.bare:focus-within {
+    background: none;
+    border: none;
+    min-height: 34px;
+}
+
+entry.password {
+    min-height: 28px;
+}
+
+spinbutton > button {
+    background: none;
+    border-radius: 5px;
+    padding: 0 4px;
+    min-height: 0;
+    color: var(--muted);
+}
+
+spinbutton > button:hover {
+    background: var(--hover);
+    color: var(--fg);
+}
+
+dropdown > button {
+    background: var(--bg);
+    border: 1px solid var(--line);
+}
+
+dropdown > button:hover {
+    background: var(--hover);
+}
+
+/* Small switches, like the settings of the widget */
+switch {
+    min-width: 30px;
+    min-height: 16px;
+    padding: 2px;
+    border-radius: 999px;
+    border: none;
+    background: var(--selected);
+    transition: background-color 160ms ease;
+}
+
+switch:checked {
+    background: var(--accent);
+}
+
+switch:disabled {
+    opacity: 0.4;
+}
+
+switch > slider {
+    min-width: 16px;
+    min-height: 16px;
+    margin: 0;
+    border: none;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+    transition: margin 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+switch image {
+    color: transparent;
+}
+
+checkbutton {
+    padding: 2px 4px;
+    border-radius: 6px;
+}
+
+checkbutton > check {
+    min-width: 14px;
+    min-height: 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: none;
+    margin-right: 6px;
+    transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+checkbutton > check:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-fg);
+}
+
+/* A row of choices sharing one tinted track */
+.segmented {
+    padding: 2px;
+    border-radius: 7px;
+    background: var(--hover);
+}
+
+.segmented > button {
+    min-height: 22px;
+    padding: 0 9px;
+    border-radius: 5px;
+    background: none;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.segmented > button:hover {
+    color: var(--fg);
+}
+
+.segmented > button:checked {
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 0 1px 2px var(--shadow);
+}
+
+/* Popovers, menus, dialogs */
+@keyframes menu-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: none; }
+}
+
+popover > contents {
+    background: var(--sidebar);
+    border: 1px solid rgb(61 68 77 / 90%);
+    border-radius: 10px;
+    box-shadow: 0 8px 22px var(--shadow);
+    padding: 4px;
+    color: var(--fg);
+    animation: menu-in 140ms var(--ease) both;
+}
+
+popover listview,
+popover listview > row {
+    background: none;
+    border-radius: 6px;
+}
+
+popover listview > row {
+    min-height: 26px;
+    padding: 0 6px;
+}
+
+popover listview > row:hover,
+popover listview > row:selected {
+    background: var(--hover);
+}
+
+window.dialog.alert {
+    background: var(--sidebar);
+    border: 1px solid rgb(61 68 77 / 90%);
+    border-radius: 12px;
+}
+
+window.dialog.alert .message-area {
+    padding: 18px 20px 14px 20px;
+}
+
+window.dialog.alert .message-area label.title {
+    font-weight: 600;
+}
+
+window.dialog.alert .message-area label.body {
+    color: var(--muted);
+}
+
+window.dialog.alert .response-area {
+    padding: 0 12px 12px 12px;
+    border-spacing: 8px;
+}
+
+window.dialog.alert .response-area > button {
+    border-radius: 6px;
+}
+
+/* Lists */
+list {
+    background: none;
+    color: var(--fg);
+}
+
+@keyframes row-in {
+    from { opacity: 0; transform: translateX(-6px); }
+    to { opacity: 1; transform: none; }
+}
+
+list > row {
+    transition: background-color 120ms ease;
+    border-radius: 6px;
+    margin: 0 6px;
+    padding: 0;
+    outline: none;
+}
+
+list > row:hover {
+    background: var(--hover);
+}
+
+list > row:selected {
+    background: var(--selected);
+    color: var(--fg);
+}
+
+list > row:focus-visible {
+    box-shadow: inset 0 0 0 1px rgb(68 147 248 / 70%);
+}
+
+.row-title {
+    font-weight: 500;
+}
+
+.row-detail {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* The rounded input box at the bottom of Ask and the top of Lookup */
+.composer {
+    background: var(--raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 6px 8px 6px 12px;
+    box-shadow: 0 6px 18px var(--shadow);
+    transition: border-color 140ms ease;
+}
+
+.composer:focus-within {
+    border-color: rgb(61 68 77 / 95%);
+}
+
+.box {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--raised);
+    padding: 14px;
+}
+
+.page-title {
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+textview,
+textview text {
+    background: none;
+    color: var(--fg);
+}
+
+textview text selection {
+    background: rgb(68 147 248 / 28%);
+}
+
+textview.code {
+    font-size: 12.5px;
+}
+
+progressbar > trough,
+progressbar > trough > progress {
+    min-height: 4px;
+    border-radius: 999px;
+    border: none;
+}
+
+progressbar > trough {
+    background: var(--hover);
+}
+
+progressbar > trough > progress {
+    background: var(--accent);
+}
+
+spinner {
+    color: var(--muted);
+}
+
+tooltip {
+    background: var(--sidebar);
+    border: 1px solid rgb(61 68 77 / 90%);
+    border-radius: 6px;
+    box-shadow: 0 6px 18px var(--shadow);
+    color: var(--fg);
+    font-size: 12px;
+}
+
+/* Setup */
+.sections {
+    padding: 12px 6px;
+}
+
+.group-title {
+    font-weight: 600;
+}
+
+.group-description {
+    font-size: 12px;
+    color: var(--faint);
+}
+
+.group {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--raised);
+}
+
+.setting {
+    padding: 10px 14px;
+}
+
+.setting.compact {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.setting.enter {
+    animation: row-in 320ms var(--ease) both;
+}
+
+/* A whole row that opens what is under it */
+button.disclosure {
+    background: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+button.disclosure:hover {
+    background: var(--hover);
+}
+
+.pill {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--blue);
+    background: rgb(68 147 248 / 14%);
+    border-radius: 6px;
+    padding: 0 6px;
+}
+
+.pill.green {
+    color: var(--green);
+    background: rgb(63 185 80 / 14%);
+}
+
+/* Package tree */
+
+.tree-package {
+    color: var(--muted);
+    font-weight: 500;
+}
+
+.tree-count {
+    color: var(--faint);
+    font-size: 11.5px;
+    font-feature-settings: "tnum";
+}
+
+.tree-class {
+    font-weight: 500;
+}
+
+/* Chat */
+.bubble {
+    background: var(--raised);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 8px 12px;
+    animation: rise-in 320ms var(--ease) both;
+}
+
+.tool-line {
+    font-family: "Lilex", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+}
+
+.tool-line.failed {
+    color: var(--danger);
+}
+
+.chat-error {
+    color: var(--danger);
+}
+
+button.small {
+    font-size: 12px;
+    padding: 0 8px;
+    min-height: 22px;
+    background: none;
+    color: var(--muted);
+}
+
+button.small:hover {
+    background: var(--hover);
+    color: var(--fg);
+}
+
+/* Rendered Markdown */
+.md-text,
+.md-cell {
+    line-height: 1.5;
+}
+
+.md-h1 {
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.md-h2 {
+    font-size: 1.15em;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.md-h3 {
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.md-marker {
+    color: var(--muted);
+    min-width: 18px;
+}
+
+.md-quote {
+    border-left: 2px solid var(--border);
+    padding-left: 12px;
+    color: var(--muted);
+}
+
+.md-table {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.md-code {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.md-code-head {
+    padding: 3px 4px 3px 12px;
+    border-bottom: 1px solid var(--line);
+    background: var(--raised);
+}
+
+.md-code-language {
+    font-family: "Lilex", monospace;
+    font-size: 11.5px;
+    color: var(--faint);
+}
+
+link {
+    color: var(--blue);
+    text-decoration: none;
+}
+
+link:hover {
+    text-decoration: underline;
+}
+
+/* A chat turn at work */
+@keyframes live-pulse {
+    from { opacity: 0.35; }
+    to { opacity: 1; }
+}
+
+.live {
+    animation: live-pulse 1s ease-in-out infinite alternate;
+}
+
+button.work-toggle {
+    background: none;
+    padding: 0 6px;
+    margin-left: -6px;
+    min-height: 22px;
+    font-weight: 400;
+}
+
+button.work-toggle:hover {
+    background: var(--hover);
+}
+
+.work-header,
+.work-arrow {
+    color: var(--muted);
+    font-feature-settings: "tnum";
+}
+
+.work {
+    border-left: 1px solid var(--line);
+    margin-left: 4px;
+    padding: 2px 0 6px 14px;
+}
+
+.work-row {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.work-row.mono {
+    font-size: 11.5px;
+}
+
+.work-row.failed {
+    color: var(--danger);
+}
+
+.thinking {
+    color: var(--muted);
+    font-size: 12.5px;
+    padding: 2px 0 6px 0;
+}
+
+/* Thinking is the same Markdown as an answer, one step quieter. */
+.thinking .md-text,
+.thinking .md-cell {
+    color: var(--muted);
+}
+
+.thinking .md-h1,
+.thinking .md-h2,
+.thinking .md-h3 {
+    font-size: 1em;
+    color: var(--fg);
+    opacity: 0.8;
+}
+
+.narration {
+    opacity: 0.62;
+    font-size: 12.5px;
+}
+
+/* Icons */
+
+button.stop {
+    background: var(--fg);
+    color: var(--bg);
+}
+
+button.stop:hover {
+    background: color-mix(in srgb, var(--fg) 85%, transparent);
+}
+
+.work-icon {
+    color: var(--faint);
+}
+
+.member-method {
+    color: var(--purple);
+}
+
+.member-field {
+    color: var(--blue);
+}
+
+.focus-note {
+    color: var(--muted);
+}
+
+/* Context menus */
+popover.menu > contents {
+    padding: 4px;
+    min-width: 190px;
+}
+
+popover.menu modelbutton {
+    min-height: 26px;
+    padding: 0 10px;
+    border-radius: 6px;
+    color: var(--fg);
+    transition: background-color 100ms ease;
+}
+
+popover.menu modelbutton:hover,
+popover.menu modelbutton:selected,
+popover.menu modelbutton:focus {
+    background: var(--hover);
+}
+
+popover.menu modelbutton accelerator {
+    color: var(--faint);
+    font-family: "Lilex", monospace;
+    font-size: 11.5px;
+}
+
+popover.menu separator {
+    margin: 4px 6px;
+    background: var(--line);
+}
+
+/* Search results */
+.results > row {
+    margin: 2px 8px;
+}
+
+.answer {
+    padding: 8px 10px;
+}
+
+.answer-name {
+    font-weight: 600;
+}
+
+.answer-signature {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.answer-place {
+    color: var(--faint);
+    font-size: 11.5px;
+}
+
+.answer-snippet {
+    font-family: "Lilex", monospace;
+    font-size: 11.5px;
+    color: var(--muted);
+    opacity: 0.85;
+}
+
+.score {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--hover);
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-feature-settings: "tnum";
+}
+
+/* Empty pages */
+@keyframes rise-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+}
+
+.empty-title {
+    font-weight: 600;
+    color: var(--fg);
+    animation: rise-in 420ms 40ms var(--ease) both;
+}
+
+.empty-help {
+    font-size: 12px;
+    color: var(--muted);
+    animation: rise-in 420ms 80ms var(--ease) both;
+}
+
+.search-bar {
+    padding: 6px 8px;
+}
+
+/* Open files */
+.pane {
+    border-right: 1px solid var(--line);
+}
+
+.pane:last-child {
+    border-right: none;
+}
+
+.pane-head {
+    padding: 4px 6px 4px 10px;
+    border-bottom: 1px solid var(--line);
+}
+
+.pane.active .pane-head {
+    background: var(--hover);
+}
+
+.pane-title {
+    font-weight: 600;
+}
+
+.pane-subtitle {
+    color: var(--faint);
+    font-size: 12px;
+}
+
+.pane-count {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--amber);
+    background: rgb(210 153 34 / 16%);
+    border-radius: 6px;
+    padding: 0 6px;
+    font-feature-settings: "tnum";
+}
+
+button.pane-button {
+    background: none;
+    padding: 0 6px;
+    min-height: 22px;
+    color: var(--muted);
+}
+
+button.pane-button:hover {
+    background: var(--hover);
+    color: var(--fg);
+}
+
+/* A method of the JDK or a library: nothing to open */
+.external .row-title {
+    color: var(--muted);
+}
+
+.external .row-detail {
+    color: var(--faint);
+}
+
+/* Where a dragged file would land. The default outline of a text view covers the whole page. */
+textview:drop(active),
+scrolledwindow:drop(active),
+box:drop(active) {
+    outline: none;
+    box-shadow: none;
+    background-image: none;
+}
+
+.pane:drop(active) {
+    box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+/* Lookup */
+.lookup-title {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.faint {
+    color: var(--faint);
+    font-size: 12px;
+}
+
+button.chip {
+    min-height: 22px;
+    padding: 0 8px;
+    font-family: "Lilex", monospace;
+    font-size: 12px;
+    color: var(--blue);
+    background: rgb(68 147 248 / 10%);
+}
+
+button.chip:hover {
+    background: rgb(68 147 248 / 20%);
+}
+
+.output {
+    margin-top: 4px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--raised);
+}
+
+.output textview,
+.output textview text {
+    background: none;
+}
+
+/* Compare */
+.compare-summary {
+    font-size: 12px;
+    color: var(--muted);
+    font-feature-settings: "tnum";
+}
+
+.status-letter {
+    font-family: "Lilex", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 16px;
+    border-radius: 4px;
+    padding: 0 3px;
+}
+
+.status-letter.modified,
+.diff-status.modified {
+    color: var(--amber);
+    background: rgb(210 153 34 / 14%);
+}
+
+.status-letter.added,
+.diff-status.added {
+    color: var(--green);
+    background: rgb(63 185 80 / 14%);
+}
+
+.status-letter.removed,
+.diff-status.removed {
+    color: var(--danger);
+    background: rgb(248 81 73 / 14%);
+}
+
+.removed-file {
+    color: var(--muted);
+}
+
+.file-counts,
+.diff-counts {
+    font-family: "Lilex", monospace;
+    font-size: 11.5px;
+    font-feature-settings: "tnum";
+}
+
+.diff-head {
+    padding: 6px 8px 6px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--raised);
+}
+
+.diff-status {
+    font-size: 11.5px;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 1px 8px;
+}
+
+.diff-path {
+    font-family: "Lilex", monospace;
+    font-size: 12.5px;
+}
+
+textview.diff-view {
+    font-size: 12.5px;
+}
+
+.split-right {
+    border-left: 1px solid var(--line);
+}
+
+/* The numbers of the open index */
+.index-title {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.tile {
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+}
+
+.tile-value {
+    font-size: 15px;
+    font-weight: 600;
+    font-feature-settings: "tnum";
+}
+
+.tile-caption {
+    font-size: 11.5px;
+    color: var(--faint);
+}
+
+/* First run */
+.onboard-title {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.step-dot {
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    font-feature-settings: "tnum";
+    color: var(--faint);
+    border: 1px solid var(--border);
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+
+.step-dot.active {
+    color: var(--accent-fg);
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgb(68 147 248 / 18%);
+}
+
+.step-dot.done {
+    color: var(--green);
+    background: rgb(63 185 80 / 14%);
+    border-color: rgb(63 185 80 / 40%);
+}
+
+.step-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--faint);
+}
+
+.step-name.active {
+    color: var(--fg);
+}
+
+.step-name.done {
+    color: var(--muted);
+}
+
+.step-line {
+    min-height: 1px;
+    background: var(--line);
+    transition: background-color 200ms ease;
+}
+
+.step-line.done,
+.step-line.active {
+    background: rgb(63 185 80 / 70%);
+}

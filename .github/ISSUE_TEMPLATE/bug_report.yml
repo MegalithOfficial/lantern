@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible problem with Lantern.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the command or UI steps and a small example when possible.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Lantern version
+      description: Run `lantern --version` or open Setup → About.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and architecture
+      placeholder: Arch Linux x86_64, Windows 11 x86_64, macOS arm64…
+    validations:
+      required: true
+  - type: input
+    id: minecraft
+    attributes:
+      label: Minecraft version
+      description: If relevant, include the version and mappings used to build the index.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Remove API keys and other private information before posting.

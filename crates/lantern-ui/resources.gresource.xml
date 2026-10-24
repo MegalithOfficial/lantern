@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/dev/megalithofficial/Lantern">
+    <file alias="icons/scalable/apps/dev.megalithofficial.Lantern.svg">lantern-icon.svg</file>
+    <file alias="icons/scalable/apps/dev.megalithofficial.Lantern.Snapshot.svg">lantern-icon.svg</file>
+  </gresource>
+</gresources>

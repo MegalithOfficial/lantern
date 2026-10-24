@@ -1,0 +1,13 @@
+[package]
+name = "lantern-embed"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+lantern-core.workspace = true
+anyhow.workspace = true
+ort = { version = "2.0.0-rc.10", features = ["download-binaries"] }
+tokenizers = { version = "0.22", default-features = false, features = ["onig"] }
+hf-hub = { version = "0.4", default-features = false, features = ["ureq"] }
+rusqlite.workspace = true
