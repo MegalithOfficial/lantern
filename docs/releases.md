@@ -13,7 +13,7 @@ To get a build without tagging, run the Build workflow manually and download its
 
 ## Packages
 
-CLI and MCP archives are built for Linux x86_64, Windows x86_64, and macOS x86_64/arm64. The Linux desktop archive also includes the app, icon, and `install.sh`.
+CLI and MCP archives are built for Linux x86_64, Windows x86_64, and macOS arm64. Intel Macs are not built: ONNX Runtime publishes no x86_64 macOS binaries. The Linux desktop archive also includes the app, icon, and `install.sh`.
 
 The desktop build uses Arch Linux and requires GTK 4.22+, GtkSourceView 5, Pango 1.56+, and compatible glibc/C++ libraries. Extract the archive and run `./install.sh` to install it for your user. Install Java 21 or newer to decompile Minecraft.
 
