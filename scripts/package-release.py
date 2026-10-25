@@ -32,8 +32,6 @@ def verify_version(current, ref_type, ref_name):
 def package(target, desktop=False, bin_dir=None, output=None):
     if target not in TARGETS:
         raise ValueError(f"Unsupported target: {target}")
-    if desktop and target != "x86_64-unknown-linux-gnu":
-        raise ValueError("Desktop archives are currently built for Linux x86_64")
     bin_dir = Path(bin_dir) if bin_dir else ROOT / "target" / target / "release"
     output = Path(output) if output else ROOT / "dist"
     output.mkdir(parents=True, exist_ok=True)
@@ -59,9 +57,10 @@ def package(target, desktop=False, bin_dir=None, output=None):
             for filename in ("OFL-IBMPlex.txt", "OFL-Lilex.txt"):
                 shutil.copy2(ROOT / "crates/lantern-ui/src/theme/fonts" / filename, licenses / filename)
             shutil.copy2(ROOT / "assets/lantern-icon.svg", stage / "lantern.svg")
-            shutil.copy2(ROOT / "packaging/dev.megalithofficial.Lantern.desktop", stage / "dev.megalithofficial.Lantern.desktop")
-            shutil.copy2(ROOT / "packaging/install.sh", stage / "install.sh")
-            (stage / "install.sh").chmod(0o755)
+            if target.endswith("linux-gnu"):
+                shutil.copy2(ROOT / "packaging/dev.megalithofficial.Lantern.desktop", stage / "dev.megalithofficial.Lantern.desktop")
+                shutil.copy2(ROOT / "packaging/install.sh", stage / "install.sh")
+                (stage / "install.sh").chmod(0o755)
         notes = [
             f"Lantern {current} ({target})",
             "Keep the binaries and any accompanying runtime libraries in the same directory.",
@@ -69,11 +68,26 @@ def package(target, desktop=False, bin_dir=None, output=None):
             "Java 21 or newer is required to decompile Minecraft; it is not bundled.",
         ]
         if desktop:
+            if windows:
+                shutil.copy2(ROOT / "scripts/setup-windows.ps1", stage / "setup-windows.ps1")
+                notes += [
+                    "In PowerShell, run . ./setup-windows.ps1 to install GTK and configure this session,",
+                    "then run ./lantern-ui.exe. Repeat the dot-source command in each new session.",
+                    "The Microsoft Visual C++ x64 Redistributable is also required.",
+                ]
+            elif target.endswith("apple-darwin"):
+                notes += [
+                    "Install the desktop runtime with: brew install gtk4 gtksourceview5",
+                    "Run ./lantern-ui from Terminal. This build is for Apple Silicon Macs.",
+                ]
+            else:
+                notes += [
+                    "Run ./lantern-ui to launch, or ./install.sh to install for the current user.",
+                    "This desktop build uses Arch Linux and needs compatible glibc/C++ libraries.",
+                ]
             notes += [
-                "Run ./lantern-ui to launch, or ./install.sh to install for the current user.",
-                "This desktop build uses Arch Linux and needs a compatible system with GTK >= 4.22,",
-                "GtkSourceView 5, Pango >= 1.56, and the build's glibc/C++ runtime dependencies.",
-                "It is not a self-contained AppImage. No Minecraft files, models, or API keys are bundled.",
+                "GTK >= 4.22, GtkSourceView 5 and Pango >= 1.56 must be installed separately.",
+                "No Minecraft files, models, or API keys are bundled.",
             ]
         (stage / "RELEASE.txt").write_text("\n".join(notes) + "\n", encoding="utf-8")
         if windows:

@@ -41,7 +41,19 @@ cargo build --release --locked -p lantern-cli -p lantern-mcp
 
 Setup downloads selected Minecraft versions from 26.1 onward, decompiles them with Vineflower, builds indexes, and optionally generates embeddings. Chat configuration is optional.
 
-For the desktop app, install development libraries for GTK 4.22+, Pango 1.56+, and GtkSourceView 5, plus GLib development tools:
+The desktop app runs on Linux, Windows x86_64, and Apple Silicon macOS. Install development libraries for GTK 4.22+, Pango 1.56+, and GtkSourceView 5, plus GLib development tools. On macOS:
+
+```sh
+brew install gtk4 gtksourceview5 pkgconf
+```
+
+On Windows, install Rust's MSVC toolchain and Visual Studio's **Desktop development with C++** tools, then dot-source the GTK setup script in PowerShell:
+
+```powershell
+. ./scripts/setup-windows.ps1
+```
+
+The script downloads a pinned, checksum-verified [gvsbuild GTK stack](https://github.com/wingtk/gvsbuild/releases/tag/2026.8.0) and configures the current shell. Run it again in each new PowerShell session. Then, on any supported platform:
 
 ```sh
 cargo run --release --locked -p lantern-ui
@@ -108,7 +120,7 @@ Formatting requires nightly Rustfmt for crate-level import grouping. CI also lin
 
 **Setup → About** shows the app version and checks published stable releases on request. The CLI reports its version with `lantern --version`.
 
-GitHub Actions builds CLI/MCP archives for Linux, Windows, and macOS, plus a Linux desktop archive. Matching version tags create draft releases after checks pass. See [release instructions](docs/releases.md) for publishing and runtime requirements.
+GitHub Actions builds CLI/MCP and desktop archives for Linux, Windows, and macOS. GTK is a separate runtime dependency. Matching version tags create draft releases after checks pass. See [release instructions](docs/releases.md) for publishing and platform-specific runtime requirements.
 
 ## Disclaimer
 

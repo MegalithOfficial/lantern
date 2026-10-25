@@ -22,7 +22,7 @@ class PackageReleaseTests(unittest.TestCase):
             release.verify_version("1.2.3", "tag", "v1.2.4")
 
     def test_archives_include_binaries_licenses_and_desktop_resources(self):
-        for target, desktop in [(release.TARGETS[0], True), (release.TARGETS[1], False)]:
+        for target, desktop in [(target, desktop) for target in release.TARGETS for desktop in (False, True)]:
             with self.subTest(target=target), tempfile.TemporaryDirectory() as temporary:
                 root = Path(temporary)
                 binaries = root / "bin"
@@ -32,7 +32,7 @@ class PackageReleaseTests(unittest.TestCase):
                     binary = binaries / (name + suffix)
                     binary.write_bytes(b"test binary")
                     binary.chmod(0o755)
-                library_name = "onnxruntime.dll" if suffix else "libonnxruntime.so.1"
+                library_name = "onnxruntime.dll" if suffix else ("libonnxruntime.dylib" if "apple" in target else "libonnxruntime.so.1")
                 (binaries / library_name).write_bytes(b"test runtime")
                 archive = release.package(target, desktop, binaries, root / "out")
                 checksum = archive.with_name(archive.name + ".sha256").read_text().split()[0]
@@ -44,16 +44,28 @@ class PackageReleaseTests(unittest.TestCase):
                 else:
                     with tarfile.open(archive) as bundle:
                         paths = [Path(member.name) for member in bundle.getmembers()]
-                        installer = next(member for member in bundle.getmembers() if member.name.endswith("/install.sh"))
-                        self.assertTrue(installer.mode & 0o111)
+                        if desktop and "linux" in target and os.name != "nt":
+                            installer = next(member for member in bundle.getmembers() if member.name.endswith("/install.sh"))
+                            self.assertTrue(installer.mode & 0o111)
+                        for member in bundle.getmembers():
+                            if os.name != "nt" and member.name.endswith(("/lantern", "/lantern-mcp", "/lantern-ui")):
+                                self.assertTrue(member.mode & 0o111)
                 names = [path.name for path in paths]
                 for name in ("LICENSE", "README.md", "RELEASE.txt", "lantern-mcp" + suffix, library_name):
                     self.assertIn(name, names)
                 if desktop:
-                    for name in ("lantern.svg", "dev.megalithofficial.Lantern.desktop", "Lucide.txt", "OFL-IBMPlex.txt", "OFL-Lilex.txt"):
+                    for name in ("lantern-ui" + suffix, "lantern.svg", "Lucide.txt", "OFL-IBMPlex.txt", "OFL-Lilex.txt"):
                         self.assertIn(name, names)
+                    if "linux" in target:
+                        self.assertIn("dev.megalithofficial.Lantern.desktop", names)
+                        self.assertIn("install.sh", names)
+                    else:
+                        self.assertNotIn("dev.megalithofficial.Lantern.desktop", names)
+                        self.assertNotIn("install.sh", names)
+                    self.assertEqual("setup-windows.ps1" in names, bool(suffix))
                 else:
-                    self.assertNotIn("lantern-ui.exe", names)
+                    self.assertNotIn("lantern-ui" + suffix, names)
+                    self.assertNotIn("setup-windows.ps1", names)
 
     @unittest.skipIf(os.name == "nt", "creating symlinks requires Windows Developer Mode")
     def test_runtime_symlinks_are_packaged_as_files(self):

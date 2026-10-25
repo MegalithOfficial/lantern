@@ -1,0 +1,23 @@
+name: Set up desktop dependencies
+description: Install the GTK stack for native Windows and macOS desktop builds
+runs:
+  using: composite
+  steps:
+    - name: Install macOS dependencies
+      if: runner.os == 'macOS'
+      shell: bash
+      run: brew install gtk4 gtksourceview5 pkgconf
+    - uses: actions/cache@v5
+      if: runner.os == 'Windows'
+      with:
+        path: ${{ runner.temp }}/lantern-gtk
+        key: gtk-msvc-x64-2026.8.0-1f95a92d
+    - name: Install Windows dependencies
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        . "$env:GITHUB_WORKSPACE/scripts/setup-windows.ps1" -GtkRoot "$env:RUNNER_TEMP/lantern-gtk"
+        "$GtkRoot\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+        foreach ($name in @('LIB', 'INCLUDE', 'PKG_CONFIG_PATH', 'PKG_CONFIG')) {
+          "$name=$([Environment]::GetEnvironmentVariable($name))" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+        }

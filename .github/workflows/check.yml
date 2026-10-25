@@ -47,7 +47,7 @@ jobs:
           args: -color
 
   tools:
-    name: CLI and MCP (${{ matrix.os }})
+    name: Binaries (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 40
     strategy:
@@ -61,16 +61,30 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - uses: ./.github/actions/setup-desktop
+        if: runner.os != 'Linux'
       - uses: Swatinem/rust-cache@v2
         with:
           key: tools
           cache-directories: .cache/ort
       - name: Check
-        run: cargo check --workspace --exclude lantern-ui --all-targets --locked
+        run: cargo check --workspace ${{ runner.os == 'Linux' && '--exclude lantern-ui' || '' }} --all-targets --locked
       - name: Clippy
-        run: cargo clippy --workspace --exclude lantern-ui --all-targets --locked
+        run: cargo clippy --workspace ${{ runner.os == 'Linux' && '--exclude lantern-ui' || '' }} --all-targets --locked
       - name: Test
-        run: cargo test --workspace --exclude lantern-ui --locked
+        run: cargo test --workspace ${{ runner.os == 'Linux' && '--exclude lantern-ui' || '' }} --locked
+      - name: Check packaging
+        run: python -m unittest discover -s scripts -p 'test_*.py' -v
+      - name: Build desktop
+        if: runner.os != 'Linux'
+        run: cargo build --locked -p lantern-ui
+      - name: Smoke test desktop
+        if: runner.os != 'Linux'
+        shell: bash
+        run: python scripts/smoke-desktop.py target/debug/lantern-ui${{ runner.os == 'Windows' && '.exe' || '' }}
 
   desktop:
     name: Linux desktop

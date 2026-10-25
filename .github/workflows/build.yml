@@ -28,7 +28,7 @@ jobs:
         run: python3 scripts/package-release.py --verify-version
 
   tools:
-    name: CLI and MCP (${{ matrix.target }})
+    name: Binaries (${{ matrix.target }})
     needs: version
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
@@ -38,10 +38,16 @@ jobs:
         include:
           - os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
+            packages: -p lantern-cli -p lantern-mcp
+            desktop: ''
           - os: windows-2025
             target: x86_64-pc-windows-msvc
+            packages: --workspace
+            desktop: --desktop
           - os: macos-15
             target: aarch64-apple-darwin
+            packages: --workspace
+            desktop: --desktop
     steps:
       - uses: actions/checkout@v7
         with:
@@ -52,14 +58,23 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: '3.13'
+      - uses: ./.github/actions/setup-desktop
+        if: matrix.desktop != ''
       - uses: Swatinem/rust-cache@v2
         with:
           key: release-${{ matrix.target }}
           cache-directories: .cache/ort
       - name: Build optimized binaries
-        run: cargo build --release --locked --target ${{ matrix.target }} -p lantern-cli -p lantern-mcp
+        run: cargo build --release --locked --target ${{ matrix.target }} ${{ matrix.packages }}
+      - name: Smoke test desktop
+        if: matrix.desktop != ''
+        shell: bash
+        run: python scripts/smoke-desktop.py target/${{ matrix.target }}/release/lantern-ui${{ runner.os == 'Windows' && '.exe' || '' }}
       - name: Package
         run: python scripts/package-release.py --target ${{ matrix.target }}
+      - name: Package desktop
+        if: matrix.desktop != ''
+        run: python scripts/package-release.py --target ${{ matrix.target }} --desktop
       - uses: actions/upload-artifact@v7
         with:
           name: lantern-${{ matrix.target }}

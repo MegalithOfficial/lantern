@@ -323,9 +323,12 @@ pub fn fill_tree(list: &gtk::ListBox, rows: &[crate::browse::tree::Row]) {
     }
 }
 
-/// Minimize, maximize and close, drawn by Lantern: the theme's do not match anything else here.
+/// macOS uses its native titlebar; other platforms draw the controls in the content bar.
 pub fn window_controls(window: &gtk::Window) -> gtk::Box {
     let controls = gtk::Box::new(gtk::Orientation::Horizontal, 4);
+    if cfg!(target_os = "macos") {
+        return controls;
+    }
     controls.set_valign(gtk::Align::Center);
     controls.set_margin_start(10);
     for (icon, class) in [("win-minimize", "minimize"), ("win-maximize", "maximize"), ("win-close", "close")] {
@@ -594,10 +597,12 @@ pub fn build(window: &gtk::Window, sender: &ComponentSender<App>) -> Widgets {
     gtk::IconTheme::for_display(&gtk::prelude::WidgetExt::display(window)).add_resource_path("/dev/megalithofficial/Lantern/icons");
     window.set_icon_name(Some("dev.megalithofficial.Lantern"));
 
-    // No system titlebar, the top bar of the main pane carries the window buttons.
-    let stub = gtk::Box::new(gtk::Orientation::Horizontal, 0);
-    stub.add_css_class("titlebar-stub");
-    window.set_titlebar(Some(&stub));
+    // Keep the native macOS titlebar so its traffic lights have space above the content.
+    if !cfg!(target_os = "macos") {
+        let stub = gtk::Box::new(gtk::Orientation::Horizontal, 0);
+        stub.add_css_class("titlebar-stub");
+        window.set_titlebar(Some(&stub));
+    }
 
     let stack = gtk::Stack::new();
     stack.set_transition_type(gtk::StackTransitionType::Crossfade);
@@ -1030,7 +1035,8 @@ pub fn build(window: &gtk::Window, sender: &ComponentSender<App>) -> Widgets {
     {
         let sender = sender.clone();
         keys.connect_key_pressed(move |_, key, _, modifiers| {
-            if modifiers.contains(gtk::gdk::ModifierType::CONTROL_MASK) && key == gtk::gdk::Key::f {
+            let primary = if cfg!(target_os = "macos") { gtk::gdk::ModifierType::META_MASK } else { gtk::gdk::ModifierType::CONTROL_MASK };
+            if modifiers.contains(primary) && key == gtk::gdk::Key::f {
                 sender.input(Msg::FocusSearch);
                 return gtk::glib::Propagation::Stop;
             }
